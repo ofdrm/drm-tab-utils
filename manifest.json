@@ -1,0 +1,19 @@
+{
+    "name":"DrmTabUtils",
+    "version":"1.0",
+    "description":"Tab Utils for sorting, rearranging tabs and copying urls/titles",
+    "manifest_version":3,
+    "permissions":["clipboardWrite","tabs"],
+    "action": {
+        "default_icon": {                    
+          "16": "images/icon16.png",          
+          "32": "images/icon32.png"            
+        },
+        "default_title": "DRM Tab Utils",
+        "default_popup":"popup.html"
+      },
+      "icons": {
+        "16": "images/icon16.png",          
+        "32": "images/icon32.png"
+      }
+}
