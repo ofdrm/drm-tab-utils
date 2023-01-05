@@ -4,24 +4,38 @@
     <style>
       button {
         height: 20px;
-        width: 400px;
+        width: 200px;
         outline: none;
       }
     </style>
   </head>
   <body>
-    <button id="reverseAll">Reverse All Tabs</button>
-    <button id="reverseSelected">Reverse Selected Tabs</button>
-    <button id="sortByDomainAndName">Sort by Domain and Name</button>
-    <button id="fetchUrls" style="display: none;">Fetch URLs</button>
-    <button id="fetchNCopyUrls">Fetch &amp; Copy URLs</button>
-    <button id="fetchNCopyUrlsNTitles">Fetch &amp; Copy URLs &amp; titles</button>
-    <button id="fetchNCopyThisUrl">Fetch &amp; Copy this URL</button>
-    <button id="fetchNCopyThisUrlNTitle">Fetch &amp; Copy this URL &amp; title</button>
+    <table>
+      <tr>
+        <td><button id="reverseAll">Reverse All Tabs</button></td>
+        <td><button id="reverseSelected">Reverse Selected Tabs</button></td>
+      </tr>
+      <tr>
+        <td colspan="2"><button id="sortByDomainAndName" style="width: 100%">Sort by Domain and Name</button></td>
+      </tr>
+      <tr>
+        <td><button id="fetchNCopyUrls">Copy All URLs</button></td>
+        <td><button id="fetchNCopyUrlsNTitles">Copy All URLs &amp; titles</button></td>
+      </tr>
+      <tr>
+        <td><button id="fetchNCopyThisUrl">Copy this URL</button></td>
+        <td><button id="fetchNCopyThisUrlNTitle">Copy this URL &amp; title</button></td>
+      </tr>
+      <tr>
+        <td><button id="fetchNCopySelectedTabsUrls">Copy these Tabs' URLs</button></td>
+        <td><button id="fetchNCopySelectedTabsUrlNTitles">Copy these Tabs' URLs &amp; titles</button></td>
+      </tr>
+    </table>
     <div style="display:block;">
       <h3>URLs will appear below</h3>
       <hr/>
-      <button id="copyUrls">Copy URLs</button>
+      <button id="fetchUrls" style="display: none;">Fetch URLs</button>
+      <button id="copyUrls" style="display: none;">Copy URLs</button>
       <div>
           <textarea id="copiedUrls" style="width: 400px;height:200px"></textarea>
       </div>

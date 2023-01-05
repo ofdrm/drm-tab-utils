@@ -9,6 +9,8 @@ let fetchNCopyUrls = document.getElementById('fetchNCopyUrls');
 let fetchNCopyUrlsNTitles = document.getElementById('fetchNCopyUrlsNTitles');
 let fetchNCopyThisUrl = document.getElementById('fetchNCopyThisUrl');
 let fetchNCopyThisUrlNTitle = document.getElementById('fetchNCopyThisUrlNTitle');
+let fetchNCopySelectedTabsUrls = document.getElementById('fetchNCopySelectedTabsUrls');
+let fetchNCopySelectedTabsUrlNTitles = document.getElementById('fetchNCopySelectedTabsUrlNTitles');
 
 function fetchTabUrls(currTab, withTitle) {
     return new Promise(function(resolve, reject) {
@@ -48,6 +50,10 @@ function copyToClipboard() {
     document.execCommand('Copy');
 }
 
+function log(text) {
+    status.innerText += text;
+}
+
 copyUrls.onclick = function(element) {
     copyToClipboard();
 };
@@ -68,21 +74,51 @@ fetchNCopyThisUrlNTitle.onclick = function(element) {
     fetchTabUrls(true, true).then(tCount => copyToClipboard());
 };
 
+fetchNCopySelectedTabsUrls.onclick = function(element) {
+    fetchSelectedTabUrls(false).then(tCount => copyToClipboard());
+};
+
+fetchNCopySelectedTabsUrlNTitles.onclick = function(element) {
+    fetchSelectedTabUrls(true).then(tCount => copyToClipboard());
+};
+
+function fetchSelectedTabUrls(withTitle) {
+    return new Promise(function(resolve, reject) {
+        try {
+            chrome.tabs.query({highlighted: true, currentWindow: true}, tabs => {
+                var urls = "";
+                for (var idx = 0; idx < tabs.length; idx++) {
+                    // log(typeof tabs[idx] + ":" + JSON.stringify(tabs[idx]));
+                    if (withTitle) urls += tabs[idx].title + "\n";
+                    urls += tabs[idx].url + "\n";
+                }
+
+                copiedUrls.value = urls;
+                status.innerText = `Copied ${tabs.length} tabs`;
+
+                resolve(tabs.length);
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
 function reverseAllTabs() {
     return new Promise(
         function(resolve, reject) {
             try {
                 chrome.tabs.query({currentWindow: true}, tabs => {
                     var tabsCount = tabs.length;
-                    // status.innerText += `[Total ${tabsCount} tabs found]`;
+                    // log(`[Total ${tabsCount} tabs found]`);
 
                     for (var i = tabsCount - 1; i >= 0; i--) {
                         var tabId = tabs[i].id;
                         var newTabPos = tabsCount;
-                        // status.innerText += `[moving tab ${tabId} to position ${newTabPos}]`;
+                        // log(`[moving tab ${tabId} to position ${newTabPos}]`);
 
                         chrome.tabs.move(tabId, {index: newTabPos}, (tabs) => {
-                            // status.innerText += "[Done]";
+                            // log("[Done]");
                         });
                     }
 
@@ -100,17 +136,17 @@ function reverseSelectedTabs() {
         try {
             chrome.tabs.query({highlighted: true}, tabs => {
                 var tabsCount = tabs.length;
-                // status.innerText += `[Total ${tabsCount} tabs found]`;
+                // log(`[Total ${tabsCount} tabs found]`);
                 var startPosn = tabs[0].index;
 
                 for (var i = 0; i < tabsCount; i++) {
                     var tabId = tabs[i].id;
                     var tabUrl = tabs[i].url;
-                    // status.innerText += `[${i} = ${tabUrl}]`;
-                    // status.innerText += `[moving tab ${tabUrl} to position ${startPosn}]`;
+                    // log(`[${i} = ${tabUrl}]`);
+                    // log(`[moving tab ${tabUrl} to position ${startPosn}]`);
 
                     chrome.tabs.move(tabId, { index : startPosn}, (tabs) => {
-                        // status.innerText += "[Done]";
+                        // log("[Done]");
                     });
                 }
 
@@ -137,7 +173,7 @@ function sortTabsByDomainAndName() {
 
                     var url = new URL(tabUrl);
                     var domain = url.hostname.replace('www.', '');
-                    // status.innerText += `[${domain}]`;
+                    // log(`[${domain}]`);
 
                     m[domain] = m[domain] || [];
                     m[domain].push({id: tabId, title: tabTitle});
@@ -152,7 +188,7 @@ function sortTabsByDomainAndName() {
                     for (var i = 0; i < tabsList.length; i++) {
                         var tab = tabsList[i];
                         chrome.tabs.move(tab.id, {index: ti++}, (tabs) => {
-                            // status.innerText += "[Done]";
+                            // log("[Done]");
                         });
                     }
                 }
